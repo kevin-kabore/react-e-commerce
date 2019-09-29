@@ -21,11 +21,27 @@ class App extends Component {
   unsubscrubeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscrubeFromAuth = auth.onAuthStateChanged(async user => {
-      createUserProfileDocument(user);
+    this.unsubscrubeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
 
-      // this.setState({ currentUser: user });
-      console.log(user);
+        userRef.onSnapshot(snapShotObj => {
+          // console.log(snapShotObj);
+          // console.log(snapShotObj.data());
+
+          this.setState(
+            {
+              currentUser: {
+                id: snapShotObj.id,
+                ...snapShotObj.data(),
+              },
+            },
+            () => console.log(this.state)
+          );
+        });
+      } else {
+        this.setState({ currentUser: userAuth }); // sets to null if no userAuth
+      }
     });
   }
 
