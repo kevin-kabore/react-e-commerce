@@ -19,7 +19,9 @@
     justify-content: flex-end;
 
     .nav-link {
+      cursor: pointer;
       padding: 10px 15px;
+      text-transform: uppercase;
     }
   }
 }

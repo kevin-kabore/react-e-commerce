@@ -30,7 +30,6 @@ class SignIn extends Component {
     this.setState({ [name]: value }); // dynamically sets 'email' or 'password' state
   };
   render() {
-    console.log(this.state);
     return (
       <div className="sign-in">
         <h2>I already have an account</h2>
@@ -54,10 +53,12 @@ class SignIn extends Component {
             label="Password"
             required
           />
-          <CustomButton type="submit">Sign In</CustomButton>
-          <CustomButton onClick={signInWithGoogle}>
-            Sign In With Google
-          </CustomButton>
+          <div className="buttons">
+            <CustomButton type="submit">Sign In</CustomButton>
+            <CustomButton onClick={signInWithGoogle} isGoogleSignIn>
+              Sign In With Google
+            </CustomButton>
+          </div>
         </form>
       </div>
     );
