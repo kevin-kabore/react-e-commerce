@@ -7,7 +7,7 @@ import Header from './components/header/Header';
 import HomePage from './pages/home/HomePage';
 import ShopPage from './pages/shop/ShopPage';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends Component {
   constructor() {
@@ -21,8 +21,10 @@ class App extends Component {
   unsubscrubeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscrubeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user });
+    this.unsubscrubeFromAuth = auth.onAuthStateChanged(async user => {
+      createUserProfileDocument(user);
+
+      // this.setState({ currentUser: user });
       console.log(user);
     });
   }

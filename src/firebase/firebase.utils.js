@@ -13,6 +13,44 @@ const config = {
   measurementId: 'G-GSYJLHXGF8',
 };
 
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+  // query to firestore returns queryReference, or quesrySnapshot
+  // - can be either Document, or Collection versions. Will always return this even if no results
+  // QueryReference: Object that represents the CURRENT place in DB that we are querying
+  // - firestore.doc('/users/:userId') or
+  // - firestore.collections('/users')
+  // - does not have the actual data. Gives details or method to get the Snapshot object
+  // Snapshot Object contains actual data
+  // documentRef returns a documentSnapshot object
+  // collectionRef returns a querySnapshot object
+
+  const userRef = firestore.doc(`users/${userAuth.uid}`); //documentRef used to CRUD
+
+  const snapShot = await userRef.get(); // .get() gives snapShotObject which gives preview of data
+
+  if (!snapShot.exists) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      // make async req to db
+      // documentRef object used to CRUD
+      // .set() Create/Post equivalent
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData,
+      });
+    } catch (error) {
+      console.log('error creating user', error.message);
+    }
+  }
+
+  return userRef; // will use this in app
+};
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
